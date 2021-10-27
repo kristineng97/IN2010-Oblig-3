@@ -3,7 +3,7 @@ from typing import List
 import insertion
 import selection
 import quick
-import heap
+#import merge
 
 def read_data(filename: str) -> List[int]:
     """Reads a file with one integer on each line"""
@@ -19,10 +19,16 @@ def read_array() -> List[int]:
 
 def main():
     A = read_array()
+    n = len(A)
     print("Insertion")
     print(insertion.sort(A))
     print("Selection")
     print(selection.sort(A))
+    print("Quick")
+    print(quick._sort(A, 0, n-1))
+    #print("Merge")
+    #print(merge.sort(A))
+
 
 
 
