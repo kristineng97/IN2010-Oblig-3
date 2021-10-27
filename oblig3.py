@@ -2,8 +2,9 @@ import sys
 from typing import List
 import insertion
 import selection
-import quick
-import heap
+#import quick
+#import heap
+import merge
 
 def read_data(filename: str) -> List[int]:
     """Reads a file with one integer on each line"""
@@ -23,6 +24,8 @@ def main():
     print(insertion.sort(A))
     print("Selection")
     print(selection.sort(A))
+    print("Merge")
+    print(merge._sort(A))
 
 
 
