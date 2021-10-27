@@ -1,6 +1,8 @@
 import numpy as np
 from typing import List
 import statistics
+from countcompares import CountCompares
+from countswaps import CountSwaps
 
 
 
@@ -12,7 +14,6 @@ def partition(A: List[int],low: int, high: int) -> int:
     n = len(A)
     p = choosepivot(A, low, high)
     A[p], A[high] = A[high], A[p]
-    print(A)
     pivot = A[high]
     left = low
     right = high - 1

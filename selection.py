@@ -1,7 +1,9 @@
 import numpy as np
 from typing import List
+from countcompares import CountCompares
+from countswaps import CountSwaps
 
-def sort(A: List[int]) -> List[int]:
+def _sort(A: List[int]) -> List[int]:
     n = len(A)
     for i in range(n-1):
         k = i
