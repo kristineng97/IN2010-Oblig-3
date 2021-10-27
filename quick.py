@@ -6,7 +6,7 @@ import statistics
 
 def choosepivot(A: List[int],low: int, high: int) -> int:
     n = len(A)
-    return statistics.median([(A[0], 0), (A[n//2],n//2), (A[n-1],n-1)])[1]
+    return statistics.median([(A[low], low), (A[n//2],n//2), (A[high],high)])[1]
 
 def partition(A: List[int],low: int, high: int) -> int:
     n = len(A)
