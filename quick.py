@@ -1,16 +1,16 @@
 import numpy as np
-from typing import List
+from typing import List, Optional
 import statistics
 from countcompares import CountCompares
 from countswaps import CountSwaps
 
 
 
-def choosepivot(A: List[int],low: int, high: int) -> int:
+def choosepivot(A: List[int], low: int, high: int) -> int:
     n = len(A)
     return statistics.median([(A[low], low), (A[n//2],n//2), (A[high],high)])[1]
 
-def partition(A: List[int],low: int, high: int) -> int:
+def partition(A: List[int], low: int, high: int) -> int:
     n = len(A)
     p = choosepivot(A, low, high)
     A[p], A[high] = A[high], A[p]
@@ -27,8 +27,10 @@ def partition(A: List[int],low: int, high: int) -> int:
     A[left], A[high] = A[high], A[left]
     return left
 
+def _sort(A: List[int], low: int = 0, high: Optional[int] = None) -> List[int]:
+    if high is None:
+        high = len(A) - 1
 
-def _sort(A: List[int],low: int, high: int) -> List[int]:
     if low >= high:
         return A
     p = partition(A, low, high)
