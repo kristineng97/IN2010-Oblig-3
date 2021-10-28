@@ -1,5 +1,7 @@
 import insertion
 import selection
+import quick
+import merge
 from typing import List
 import pytest
 import oblig3
@@ -7,11 +9,11 @@ import oblig3
 
 
 def test_sort():
-    filenames = ["random_100", "random_1000"]
-    algorithms = ["insertion", "selection", "quick", "merge"]
-    for filename in filenames:
-        for algorithm in algorithms:
-            A = oblig3.read_data(f"output/{filename}_{algorithm}.out")
-            exact = sort(A)
-            assert A == sort(A),
-            f"The list was not sorted correctly with {algorithm}.sort"
+    for filename in ["random_100", "random_1000"]:
+        for algorithm in [insertion, selection, quick, merge]:
+            A = oblig3.read_data(filename)
+            expected = A.copy()
+            expected.sort()
+            computed = algorithm._sort(A)
+            assert computed == expected, "The list was not sorted correctly" + \
+                                        f" with {algorithm.__name__}._sort"
