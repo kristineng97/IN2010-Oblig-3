@@ -1,61 +1,73 @@
 import sys
-from typing import List
+from typing import List, Union
 import time
 import insertion
 import selection
 import quick
 import merge
 
-def read_data(filename: str) -> List[int]:
-    """Reads a file with one integer on each line"""
-    with open(filename, "r") as infile:
+def read_data(filename: str, folder: str = "inputs") -> List[int]:
+    """Reads a file with one integer on each line.
+    """
+    with open(f"{folder}/{filename}", "r") as infile:
         elements = []
         for line in infile:
             elements.append(int(line.strip()))
     return elements
 
-def read_array() -> List[int]:
-    """Reads an array where each int element is on its own line."""
-    return [int(element) for element in sys.stdin.readlines()]
+def write_data(A: List[int], filename: str):
+    """Takes a list A and writes its elements to a file with filename given as input.
 
-def write_elements_to_file(A: List[int], filename: str):
-    """Takes a list A and writes its elements to a file with filename given as input"""
-    outfile = open(filename, "w")
-    for element in A:
-        outfile.write(f"{element}\n")
-    outfile.close()
+    Filename is relative to outputs folder.
+    """
+    with open(f"outputs/{filename}", "w") as outfile:
+        for element in A:
+            outfile.write(str(element) + "\n")
 
-def make_results_file(algorithms: List[str], inputfile: str):
-    outfile = open(f"{inputfile}_results.csv", "w")
-    for a in algorithms:
-        outfile.write(f"n, {a}_cmp, {a}_swaps, {a}_time,
-        {a+1}_cmp, {a+1}_swaps, {a+1}_time,
-        {a+2}_cmp, {a+2}_swaps, {a+2}_time,
-        {a+3}_cmp, {a+3}_swaps, {a+3}_time")
+def make_results_file(algorithms: List[str], filename: str):
+    """Make a new file with headers for results on swaps, compares and time.
 
-        outfile.write()
+    Each algorithm gets four columns, first one for how many compares there are,
+    then one for swaps, and lastly one for time usage.
 
+    Filename is relative to outputs folder.
+    """
+    alg_headers = [f"{alg}_cmp, {alg}_swaps, {alg}_time" for alg in algorithms]
+    
+    with open(f"outputs/{filename}_results.csv", "w") as outfile:
+        outfile.write(f"n, {', '.join(alg_headers)} \n")
 
+def append_to_results_file(n: int, results: List[Union[float, int]],
+                           filename: str):
+    """Appends a line to an already existing results file"""
+    with open(f"outputs/{filename}_results.csv", "a") as outfile:
+        outfile.write(f"{n}, {', '.join([str(res) for res in results])}\n")
 
 def main():
-    A = read_array()
-    n = len(A)
-    write_to_file(insertion._sort(A), "random_10_insertion.out")
+    algorithms = [insertion, selection, merge, quick]
+    for filename in ["random_10", "random_100", "random_1000"]:
+        make_results_file([alg.__name__ for alg in algorithms], filename)
 
-    print("Selection")
-    t = time.time_ns()
-    print(selection._sort(A))
-    timeus = (time.time_ns() - t) / 1000
-    print("Selection time:", timeus)
-    
-    print("Quick")
-    print(quick._sort(A, 0, n-1))
-    print("Merge")
-    print(merge._sort(A))
+        n = int(filename.split("_")[-1])
 
-
-
-
+        for k in range(1, n + 1):
+            results = []
+            for algorithm in algorithms:
+                A = read_data(filename)
+                
+                start_time = time.time_ns()
+                sorted_A = algorithm._sort(A[:k])
+                swaps, compares = 0, 0 # Dummy variables to be found later
+                end_time = (time.time_ns() - start_time) / 1000
+                
+                # print(sorted_A)
+                results.extend([compares, swaps, end_time])
+                
+                if k == n:
+                    write_data(sorted_A, f"{filename}_{algorithm.__name__}.out")
+                print(f"{filename}: {k}/{n}", end="\r")
+            append_to_results_file(k, results, filename)
+        print()
 
 if __name__ == '__main__':
     main()
