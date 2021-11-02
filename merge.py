@@ -24,11 +24,11 @@ def merge_(A1: List[int], A2: List[int], A: List[int]) -> List[int]:
         j += 1
     return A
 
-def _sort(A: List[int]) -> List[int]:
+def _sort(A: List[int]) -> CountSwaps:
     if len(A) <= 1:
         return A
 
     i = len(A)//2
-    A1 = _sort(A[:i-1])
-    A2 = _sort(A[i:len(A)-1])
-    return merge_(A1,A2,A)
+    A1 = _sort(A[:i])
+    A2 = _sort(A[i:len(A)])
+    return merge_(A1, A2, CountSwaps(A))

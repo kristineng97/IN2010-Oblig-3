@@ -4,16 +4,14 @@ import statistics
 from countcompares import CountCompares
 from countswaps import CountSwaps
 
-
-
-def choosepivot(A: List[int], low: int, high: int) -> int:
+def choosepivot(A: CountSwaps, low: int, high: int) -> int:
     n = len(A)
     return statistics.median([(A[low], low), (A[n//2],n//2), (A[high],high)])[1]
 
-def partition(A: List[int], low: int, high: int) -> int:
+def partition(A: CountSwaps, low: int, high: int) -> int:
     n = len(A)
     p = choosepivot(A, low, high)
-    A[p], A[high] = A[high], A[p]
+    A.swap(p, high)
     pivot = A[high]
     left = low
     right = high - 1
@@ -23,11 +21,11 @@ def partition(A: List[int], low: int, high: int) -> int:
         while right >= left and A[right] >= pivot:
             right -= 1
         if left < right:
-            A[left], A[right] = A[right], A[left]
-    A[left], A[high] = A[high], A[left]
+            A.swap(left, right)
+    A.swap(left, high)
     return left
 
-def _sort(A: List[int], low: int = 0, high: Optional[int] = None) -> List[int]:
+def _sort(A: CountSwaps, low: int = 0, high: Optional[int] = None) -> CountSwaps:
     if high is None:
         high = len(A) - 1
 

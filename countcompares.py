@@ -16,5 +16,8 @@ class CountCompares:
         self.compares += 1
         return self.elem < other.elem
 
-    def __repr__(self):
+    def __repr__(self): # med fnutter
         return self.elem.__repr__()
+
+    def __str__(self):  # uten fnutter
+        return self.elem.__str__()

@@ -5,17 +5,19 @@ import insertion
 import selection
 import quick
 import merge
+from countcompares import CountCompares
+from countswaps import CountSwaps
 
-def read_data(filename: str, folder: str = "inputs") -> List[int]:
+def read_data(filename: str, folder: str = "inputs") -> List[CountCompares]:
     """Reads a file with one integer on each line.
     """
     with open(f"{folder}/{filename}", "r") as infile:
-        elements = []
+        elements = CountSwaps()
         for line in infile:
-            elements.append(int(line.strip()))
+            elements.append(CountCompares(int(line.strip())))
     return elements
 
-def write_data(A: List[int], filename: str):
+def write_data(A: List[CountCompares], filename: str):
     """Takes a list A and writes its elements to a file with filename given as input.
 
     Filename is relative to outputs folder.
@@ -54,11 +56,18 @@ def main():
             results = []
             for algorithm in algorithms:
                 A = read_data(filename)
-                
                 start_time = time.time_ns()
-                sorted_A = algorithm._sort(A[:k])
+                sorted_A = algorithm._sort(CountSwaps(A[:k]))
                 swaps, compares = 0, 0 # Dummy variables to be found later
+
                 end_time = (time.time_ns() - start_time) / 1000
+
+                # Find swaps and compares
+                for elem in sorted_A:
+                    compares += elem.compares
+                print(algorithm.__name__)
+                swaps = sorted_A.swaps
+
                 
                 # print(sorted_A)
                 results.extend([compares, swaps, end_time])
@@ -68,6 +77,7 @@ def main():
                 print(f"{filename}: {k}/{n}", end="\r")
             append_to_results_file(k, results, filename)
         print()
+
 
 if __name__ == '__main__':
     main()
