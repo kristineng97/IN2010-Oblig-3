@@ -39,13 +39,20 @@ def make_results_file(algorithms: List[str], filename: str):
     with open(f"outputs/{filename}_results.csv", "w") as outfile:
         outfile.write(f"n, {', '.join(alg_headers)} \n")
 
-def append_to_results_file(n: int, results: List[Union[float, int]],
+def append_to_results_file(n: int, results: List[int],
                            filename: str):
     """Appends a line to an already existing results file"""
     with open(f"outputs/{filename}_results.csv", "a") as outfile:
         outfile.write(f"{n}, {', '.join([str(res) for res in results])}\n")
 
 def main():
+    """Write results to file, after sorting the files with different algorithms.
+
+    Goes through every file, and then for every k from 1 to the length of the 
+    list, sort the first k elements with every algorithm. After each of these
+    iterations, store the results in a file. Also, store the final resulting 
+    file with the sorted list to another file.
+    """
     algorithms = [insertion, selection, merge, quick]
     for filename in ["random_10", "random_100", "random_1000"]:
         make_results_file([alg.__name__ for alg in algorithms], filename)
@@ -58,22 +65,18 @@ def main():
                 A = read_data(filename)
                 start_time = time.time_ns()
                 sorted_A = algorithm._sort(CountSwaps(A[:k]))
-                swaps, compares = 0, 0 # Dummy variables to be found later
+                end_time = int((time.time_ns() - start_time) / 1000)
 
-                end_time = (time.time_ns() - start_time) / 1000
-
-                # Find swaps and compares
+                compares = 0
                 for elem in sorted_A:
                     compares += elem.compares
-                print(algorithm.__name__)
-                swaps = sorted_A.swaps
-
                 
-                # print(sorted_A)
-                results.extend([compares, swaps, end_time])
+                results.extend([compares, sorted_A.swaps, end_time])
                 
+                # Write final sorted list to file
                 if k == n:
                     write_data(sorted_A, f"{filename}_{algorithm.__name__}.out")
+                
                 print(f"{filename}: {k}/{n}", end="\r")
             append_to_results_file(k, results, filename)
         print()
