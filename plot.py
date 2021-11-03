@@ -39,7 +39,7 @@ def all_cols(filenames: List[str]):
     for filename in filenames:
         fig, axs = plt.subplots(1, 3, figsize=(12, 5))
         for col_suffix, title, ax in zip(["swaps", "cmp", "time"],
-                                         ["Swaps", "Compares", "Time, ns"], axs):
+                                         ["Swaps", "Compares", "Time, ms"], axs):
             col(ax, filename, col_suffix)
             ax.set_xlabel("n (log)")
             ax.set_ylabel(f"{title} (log)")
@@ -84,7 +84,7 @@ def fit_to_time(filename: str, sqr_alg_name: str, log_alg_name: str):
     plt.xscale("log")
     plt.yscale("log")
     plt.xlabel("n (log)")
-    plt.ylabel("time, ns (log)")
+    plt.ylabel("time, ms (log)")
     plt.legend()
     plt.savefig(f"plots/{filename}_fit.pdf")
     plt.close()
