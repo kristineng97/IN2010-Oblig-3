@@ -1,7 +1,7 @@
 import numpy as np
 from typing import List, Optional
 import statistics
-from countcompares import CountCompares
+
 from countswaps import CountSwaps
 
 def choosepivot(A: CountSwaps, low: int, high: int) -> int:

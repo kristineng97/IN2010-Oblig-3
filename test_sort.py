@@ -1,12 +1,11 @@
+import pytest
+from typing import List
+
 import insertion
 import selection
 import quick
 import merge
-from typing import List
-import pytest
 import oblig3
-
-
 
 def test_sort():
     for filename in ["random_100", "random_1000"]:

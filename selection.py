@@ -1,6 +1,6 @@
 import numpy as np
 from typing import List
-from countcompares import CountCompares
+
 from countswaps import CountSwaps
 
 def _sort(A: CountSwaps) -> CountSwaps:

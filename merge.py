@@ -1,6 +1,6 @@
 import numpy as np
 from typing import List
-from countcompares import CountCompares
+
 from countswaps import CountSwaps
 
 def merge_(A1: List[int], A2: List[int], A: List[int]) -> List[int]:
