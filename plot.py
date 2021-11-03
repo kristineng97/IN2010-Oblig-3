@@ -67,7 +67,7 @@ def fit_to_time(filename: str, sqr_alg_name: str, log_alg_name: str):
     # poly = Polynomial.fit(df["n"], df[f"{sqr_alg_name.lower()}_time"], 2)
     # plt.plot(df["n"], *poly.linspace(df["n"].iloc[-1]), label=f"Fit with {poly_expression}")
 
-    n_log = lambda n, a, b, c: a + b*np.log(n) + c*n
+    n_log = lambda n, a, b, c: (a + c*n)*b*np.log(n)
     n_sqr = lambda n, a, b, c: a + b*n + c*n**2
     sqr_params, _ = curve_fit(n_sqr, df["n"], df[f"{sqr_alg_name}_time"])
     log_params, _ = curve_fit(n_log, df["n"], df[f"{log_alg_name}_time"])
