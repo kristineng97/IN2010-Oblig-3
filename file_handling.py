@@ -1,6 +1,7 @@
 from typing import List
 
 from countcompares import CountCompares
+from countswaps import CountSwaps
 
 def read_data(filename: str, folder: str = "inputs") -> List[CountCompares]:
     """Reads a file with one integer on each line.
