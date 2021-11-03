@@ -10,8 +10,7 @@ import merge
 from countcompares import CountCompares
 from countswaps import CountSwaps
 import plot
-from file_handling import read_data, write_data, make_results_file, \
-                          append_to_results_file
+import file_handling
 
 def pseudo_logspace(n_max: int, max_num_points: int = 100) -> np.ndarray:
     """Make something like a logspace, just without duplicate values.
@@ -56,15 +55,17 @@ def compute_results(algorithms: List, filenames: List[str]):
         algorithms: List of modules, each with a _sort function.
         filenames: List of filenames.
     """
+    algorithm_names = [alg.__name__ for alg in algorithms]
     for filename in filenames:
-        make_results_file([alg.__name__ for alg in algorithms], filename)
+
+        file_handling.make_results_file(algorithm_names, filename)
 
         n_max = int(filename.split("_")[-1])
 
         for n in pseudo_logspace(n_max):
             results = []
             for algorithm in algorithms:
-                A = read_data(filename)
+                A = file_handling.read_data(filename)
                 start_time = time.time_ns()
                 sorted_A = algorithm._sort(CountSwaps(A[:n]))
                 end_time = int((time.time_ns() - start_time) / 1000)
@@ -77,10 +78,10 @@ def compute_results(algorithms: List, filenames: List[str]):
                 
                 # Write final sorted list to file
                 if n == n_max:
-                    write_data(sorted_A, f"{filename}_{algorithm.__name__}.out")
+                    file_handling.write_data(sorted_A, f"{filename}_{algorithm.__name__}.out")
                 
                 print(f"{filename}: {n}/{n_max}", end="\r")
-            append_to_results_file(n, results, filename)
+            file_handling.append_to_results_file(n, results, filename)
         print()
 
 def main():
@@ -91,14 +92,12 @@ def main():
     slow_algs = [insertion, selection]
     fast_algs = [merge, quick]
 
-    if "-c" in sys.argv or "--compute" in sys.argv:
-        compute_results(slow_algs + fast_algs, small_files)
-        compute_results(fast_algs, big_files)
-        compute_results(slow_algs + fast_algs, nearly_sorted_files)
+    compute_results(slow_algs + fast_algs, small_files)
+    compute_results(fast_algs, big_files)
+    compute_results(slow_algs + fast_algs, nearly_sorted_files)
 
-    if "-p" in sys.argv or "--plot" in sys.argv:
-        plot.all_cols(small_files + nearly_sorted_files + big_files)
-        plot.fit_to_time("random_1000", "selection", "merge")
+    plot.all_cols(small_files + nearly_sorted_files + big_files)
+    plot.fit_to_time("random_1000", "selection", "merge")
 
 if __name__ == '__main__':
     main()
